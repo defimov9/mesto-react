@@ -13,11 +13,11 @@ function Card(props) {
         className='elements__image'
         onClick={handleClick}
       />
-      <div className='elements__remove'></div>
+      <div className='elements__remove' />
       <div className='elements__info-container'>
         <h2 className='elements__title'>{props.card.name}</h2>
         <div className='elements__like-container'>
-          <button className='elements__like' type='button'></button>
+          <button className='elements__like' type='button' />
           <p className='elements__likes-count'>{props.card.likes.length}</p>
         </div>
       </div>

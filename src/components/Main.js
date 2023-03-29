@@ -3,9 +3,9 @@ import api from '../utils/api';
 import Card from './Card';
 
 function Main(props) {
-  const [userName, setUserName] = React.useState();
-  const [userDescription, setUserDescription] = React.useState();
-  const [userAvatar, setUserAvatar] = React.useState();
+  const [userName, setUserName] = React.useState('');
+  const [userDescription, setUserDescription] = React.useState('');
+  const [userAvatar, setUserAvatar] = React.useState('');
   const [cards, setCards] = React.useState([]);
 
   useEffect(() => {
@@ -36,14 +36,16 @@ function Main(props) {
             <button
               className='profile__edit-button'
               type='button'
-              onClick={props.onEditProfile}></button>
+              onClick={props.onEditProfile}
+            />
           </div>
           <p className='profile__job'>{userDescription}</p>
         </div>
         <button
           className='profile__add-button'
           type='button'
-          onClick={props.onAddPlace}></button>
+          onClick={props.onAddPlace}
+        />
       </section>
       <section className='gallery content__gallery'>
         <ul className='elements'>
