@@ -7,6 +7,8 @@ import ImagePopup from './ImagePopup';
 import api from '../utils/api';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import EditProfilePopup from './EditProfilePopup';
+import EditAvatarPopup from './EditAvatarPopup';
+import AddPlacePopup from './AddPlacePopup';
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -18,16 +20,12 @@ function App() {
   const [cards, setCards] = React.useState([]);
 
   useEffect(() => {
-    api
-      .getInitialCards()
-      .then((initialCards) => {
+    Promise.all([api.getUserData(), api.getInitialCards()])
+      .then(([userData, initialCards]) => {
+        setCurrentUser(userData);
         setCards(initialCards);
       })
       .catch((err) => console.log(err));
-  }, []);
-
-  useEffect(() => {
-    api.getUserData().then((userData) => setCurrentUser(userData));
   }, []);
 
   function handleCardClick(card) {
@@ -87,6 +85,26 @@ function App() {
       .catch((err) => console.log(err));
   }
 
+  function handleUpdateAvatar(link) {
+    api
+      .updateUserAvatar(link)
+      .then((updatedUserData) => {
+        setCurrentUser({ ...currentUser, ...updatedUserData });
+        closeAllPopups();
+      })
+      .catch((err) => console.log(err));
+  }
+
+  function handleAddPlaceSubmit(card) {
+    api
+      .addNewCard(card)
+      .then((newCard) => {
+        setCards([newCard, ...cards]);
+        closeAllPopups();
+      })
+      .catch((err) => console.log(err));
+  }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className='page'>
@@ -109,50 +127,17 @@ function App() {
             onUpdateUser={handleUpdateUser}
           />
 
-          <PopupWithForm
-            isOpen={isAddPlacePopupOpen}
-            onClose={closeAllPopups}
-            name='add-photo'
-            title='Новое место'
-            buttonText='Сохранить'>
-            <input
-              type='text'
-              name='name'
-              id='title'
-              className='popup__input popup__input_type_title'
-              placeholder='Название'
-              minLength='2'
-              maxLength='30'
-              required
-            />
-            <span className='popup__input-error title-error'>-</span>
-            <input
-              type='url'
-              name='link'
-              id='link'
-              className='popup__input popup__input_type_url'
-              placeholder='Ссылка на картинку'
-              required
-            />
-            <span className='popup__input-error link-error'>-</span>
-          </PopupWithForm>
-
-          <PopupWithForm
+          <EditAvatarPopup
             isOpen={isEditAvatarPopupOpen}
             onClose={closeAllPopups}
-            name='update-avatar'
-            title='Обновить аватар'
-            buttonText='Сохранить'>
-            <input
-              type='url'
-              name='link'
-              id='url'
-              className='popup__input popup__input_type_url'
-              placeholder='Ссылка на картинку'
-              required
-            />
-            <span className='popup__input-error url-error'>-</span>
-          </PopupWithForm>
+            onUpdateAvatar={handleUpdateAvatar}
+          />
+
+          <AddPlacePopup
+            isOpen={isAddPlacePopupOpen}
+            onClose={closeAllPopups}
+            onAddPlace={handleAddPlaceSubmit}
+          />
 
           <ImagePopup
             isOpen={isImagePopupOpen}
