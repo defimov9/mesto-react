@@ -29,13 +29,13 @@ class Api {
     });
   }
 
-  updateUserInfo({ name, job }) {
+  updateUserInfo({ name, about }) {
     return this._request(`${this._baseUrl}/users/me`, {
       method: 'PATCH',
       headers: this._headers,
       body: JSON.stringify({
-        name: name,
-        about: job,
+        name,
+        about,
       }),
     });
   }
