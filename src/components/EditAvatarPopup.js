@@ -3,6 +3,7 @@ import PopupWithForm from './PopupWithForm';
 
 const EditAvatarPopup = (props) => {
   const inputRef = useRef();
+  const buttonText = !props.isLoading ? 'Сохранить' : 'Сохранение...';
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -20,7 +21,7 @@ const EditAvatarPopup = (props) => {
       onSubmit={handleSubmit}
       name='update-avatar'
       title='Обновить аватар'
-      buttonText='Сохранить'>
+      buttonText={buttonText}>
       <input
         type='url'
         name='link'

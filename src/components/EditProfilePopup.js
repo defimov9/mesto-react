@@ -6,6 +6,8 @@ const EditProfilePopup = (props) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
 
+  const buttonText = !props.isLoading ? 'Сохранить' : 'Сохранение...';
+
   const currentUser = useContext(CurrentUserContext);
 
   useEffect(() => {
@@ -28,7 +30,7 @@ const EditProfilePopup = (props) => {
       onSubmit={handleSubmit}
       name='edit-profile'
       title='Редактировать профиль'
-      buttonText='Сохранить'>
+      buttonText={buttonText}>
       <input
         type='text'
         name='name'

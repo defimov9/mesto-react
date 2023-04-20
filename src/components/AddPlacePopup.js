@@ -15,6 +15,8 @@ const AddPlacePopup = (props) => {
     setLink('');
   }, [props.isOpen]);
 
+  const buttonText = !props.isLoading ? 'Добавить' : 'Добавление...';
+
   return (
     <PopupWithForm
       isOpen={props.isOpen}
@@ -22,7 +24,7 @@ const AddPlacePopup = (props) => {
       onSubmit={handleSubmit}
       name='add-photo'
       title='Новое место'
-      buttonText='Сохранить'>
+      buttonText={buttonText}>
       <input
         type='text'
         name='name'
