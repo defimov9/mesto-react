@@ -2,20 +2,23 @@ import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
 import React, { useEffect, useState } from 'react';
-import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
 import api from '../utils/api';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
+import ConfirmationPopup from './ConfirmationPopup';
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isImagePopupOpen, setIsImagePopupOpen] = useState(false);
+  const [isConfirmationPopupOpen, setIsConfirmationPopupOpen] = useState(false);
+
   const [selectedCard, setSelectedCard] = useState({});
+  const [deletingCard, setDeletingCard] = useState({});
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = React.useState([]);
 
@@ -50,6 +53,7 @@ function App() {
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
     setIsImagePopupOpen(false);
+    setIsConfirmationPopupOpen(false);
   }
 
   function handleCardLike(card) {
@@ -67,10 +71,16 @@ function App() {
   }
 
   function handleCardDelete(card) {
+    setDeletingCard(card);
+    setIsConfirmationPopupOpen(true);
+  }
+
+  function handleDeleteCardSubmit(card) {
     api
       .deleteCard(card._id)
       .then(() => {
         setCards((state) => state.filter((c) => c._id !== card._id));
+        closeAllPopups();
       })
       .catch((err) => console.log(err));
   }
@@ -143,6 +153,13 @@ function App() {
             isOpen={isImagePopupOpen}
             onClose={closeAllPopups}
             card={selectedCard}
+          />
+
+          <ConfirmationPopup
+            isOpen={isConfirmationPopupOpen}
+            onClose={closeAllPopups}
+            card={deletingCard}
+            onDeleteCard={handleDeleteCardSubmit}
           />
         </div>
       </div>
